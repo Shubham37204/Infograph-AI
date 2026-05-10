@@ -2,6 +2,7 @@
 
 import { useState } from "react"
 import InputForm from "@/components/InputForm"
+import SlideDeck from "@/components/SlideDeck"
 import { uploadResume } from "@/lib/api"
 import { SlideDeckResponse } from "@/lib/types"
 
@@ -24,32 +25,25 @@ export default function Home() {
   }
 
   return (
-    <main style={{ maxWidth: 720, margin: "4rem auto", padding: "0 1rem" }}>
-      <h1 style={{ marginBottom: "1.5rem" }}>infograph-ai</h1>
+    <main style={{ maxWidth: 680, margin: "4rem auto", padding: "0 1rem" }}>
+      <h1 style={{ marginBottom: "0.25rem" }}>infograph-ai</h1>
+      <p style={{ color: "#9ca3af", marginBottom: "1.5rem", fontSize: 14 }}>
+        Drop your resume → get a 5-slide deck
+      </p>
 
       <InputForm onUpload={handleUpload} loading={loading} />
 
-      {error && <p style={{ color: "red", marginTop: "1rem" }}>{error}</p>}
-
-      {deck && (
-        <div style={{ marginTop: "2rem" }}>
-          <h2>{deck.candidate_name}</h2>
-          {deck.slides.map((slide) => (
-            <div key={slide.type} style={{
-              border: "1px solid #e5e7eb",
-              borderRadius: 8,
-              padding: "1rem",
-              marginBottom: "1rem",
-            }}>
-              <h3 style={{ margin: "0 0 0.5rem" }}>{slide.title}</h3>
-              <p style={{ margin: "0 0 0.5rem", color: "#6b7280" }}>{slide.body}</p>
-              <ul style={{ margin: 0, paddingLeft: "1.25rem" }}>
-                {slide.bullets.map((b, i) => <li key={i}>{b}</li>)}
-              </ul>
-            </div>
-          ))}
-        </div>
+      {loading && (
+        <p style={{ textAlign: "center", color: "#6b7280", marginTop: "1.5rem" }}>
+          Analysing resume…
+        </p>
       )}
+
+      {error && (
+        <p style={{ color: "#ef4444", marginTop: "1rem" }}>{error}</p>
+      )}
+
+      {deck && <SlideDeck deck={deck} />}
     </main>
   )
 }
