@@ -1,7 +1,9 @@
 export type SlideType =
+  | "snapshot"
   | "summary"
   | "skills"
   | "experience"
+  | "timeline"
   | "strengths"
   | "recommendations"
   | "ats_score"
@@ -11,7 +13,7 @@ export interface Slide {
   title: string
   body: string
   bullets: string[]
-  chart_image?: string  
+  chart_image?: string
 }
 
 export interface SlideDeckResponse {

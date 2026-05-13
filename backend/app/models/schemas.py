@@ -1,11 +1,12 @@
 from enum import Enum
 from pydantic import BaseModel
 
-
 class SlideType(str, Enum):
+    snapshot        = "snapshot"
     summary         = "summary"
     skills          = "skills"
     experience      = "experience"
+    timeline        = "timeline"
     strengths       = "strengths"
     recommendations = "recommendations"
     ats_score       = "ats_score"
@@ -16,7 +17,7 @@ class Slide(BaseModel):
     title: str
     body: str
     bullets: list[str] = []
-    chart_image: str | None = None  
+    chart_image: str | None = None   # base64 PNG for skills slide
 
 
 class SlideDeckResponse(BaseModel):
