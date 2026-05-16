@@ -1,8 +1,30 @@
-import json
-from groq import Groq
-from app.config import GROQ_API_KEY, GROQ_MODEL
+"""
+LLM service — async Groq client with Pydantic validation and retry.
 
-_client = Groq(api_key=GROQ_API_KEY)
+Design decisions:
+- AsyncGroq so we don't block the FastAPI event loop.
+- Pydantic validation of LLM output catches malformed JSON before it
+  reaches the frontend.
+- Simple retry (max 2) — if the LLM returns bad JSON, we try again.
+  No complex retry frameworks.
+- Input length guard — truncate oversized resumes to stay within
+  context window limits.
+"""
+
+import json
+import time
+
+from groq import AsyncGroq
+from pydantic import ValidationError
+
+from app.config import settings
+from app.exceptions import LLMError
+from app.logging import get_logger
+from app.models.schemas import SlideDeckResponse
+
+log = get_logger("llm_service")
+
+_client = AsyncGroq(api_key=settings.GROQ_API_KEY)
 
 PROMPT = """\
 You are an expert resume analyst writing for a hiring recruiter.
@@ -114,12 +136,80 @@ Resume:
 """
 
 
-def analyze_resume(resume_text: str) -> dict:
-    response = _client.chat.completions.create(
-        model=GROQ_MODEL,
-        messages=[{"role": "user", "content": PROMPT + resume_text}],
-        temperature=0.3,
-        response_format={"type": "json_object"},
-    )
-    raw = response.choices[0].message.content.strip()
-    return json.loads(raw)
+def _truncate(text: str, max_chars: int) -> str:
+    """Truncate resume text to stay within context limits."""
+    if len(text) <= max_chars:
+        return text
+    log.warning("resume_truncated", original_len=len(text), max_chars=max_chars)
+    return text[:max_chars] + "\n\n[... truncated for analysis]"
+
+
+async def analyze_resume(resume_text: str) -> dict:
+    """
+    Send resume text to Groq LLM, validate output, retry on failure.
+
+    Returns a dict matching SlideDeckResponse schema.
+    Raises LLMError if all retries are exhausted.
+    """
+    truncated = _truncate(resume_text, settings.MAX_RESUME_CHARS)
+    last_error: str = ""
+
+    for attempt in range(1, settings.LLM_MAX_RETRIES + 1):
+        start = time.perf_counter()
+        try:
+            response = await _client.chat.completions.create(
+                model=settings.GROQ_MODEL,
+                messages=[{"role": "user", "content": PROMPT + truncated}],
+                temperature=0.3,
+                response_format={"type": "json_object"},
+            )
+
+            raw = response.choices[0].message.content.strip()
+            elapsed = time.perf_counter() - start
+
+            # Parse JSON
+            data = json.loads(raw)
+
+            # Validate against Pydantic schema
+            SlideDeckResponse(**data)
+
+            log.info(
+                "llm_success",
+                attempt=attempt,
+                latency_s=round(elapsed, 2),
+                model=settings.GROQ_MODEL,
+                response_chars=len(raw),
+            )
+            return data
+
+        except json.JSONDecodeError as e:
+            elapsed = time.perf_counter() - start
+            last_error = f"Invalid JSON from LLM: {e}"
+            log.warning(
+                "llm_json_error",
+                attempt=attempt,
+                latency_s=round(elapsed, 2),
+                error=str(e),
+            )
+
+        except ValidationError as e:
+            elapsed = time.perf_counter() - start
+            last_error = f"Schema validation failed: {e.error_count()} errors"
+            log.warning(
+                "llm_validation_error",
+                attempt=attempt,
+                latency_s=round(elapsed, 2),
+                error_count=e.error_count(),
+            )
+
+        except Exception as e:
+            elapsed = time.perf_counter() - start
+            last_error = f"LLM call failed: {e}"
+            log.error(
+                "llm_call_error",
+                attempt=attempt,
+                latency_s=round(elapsed, 2),
+                error=str(e),
+            )
+
+    raise LLMError(f"AI analysis failed after {settings.LLM_MAX_RETRIES} attempts: {last_error}")

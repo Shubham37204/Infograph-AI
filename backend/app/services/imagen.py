@@ -1,6 +1,8 @@
 import base64
 import io
+
 import matplotlib
+
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 
@@ -31,7 +33,7 @@ def generate_skills_chart(bullets: list[str]) -> str:
 
     bars = ax.barh(labels[::-1], counts[::-1], color=colors[::-1], height=0.5)
 
-    for bar, count in zip(bars, counts[::-1]):
+    for bar, count in zip(bars, counts[::-1], strict=False):
         ax.text(
             bar.get_width() + 0.15,
             bar.get_y() + bar.get_height() / 2,

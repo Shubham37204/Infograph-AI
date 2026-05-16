@@ -1,5 +1,7 @@
 from enum import Enum
+
 from pydantic import BaseModel
+
 
 class SlideType(str, Enum):
     snapshot        = "snapshot"

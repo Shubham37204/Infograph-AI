@@ -1,6 +1,6 @@
 import { SlideDeckResponse } from "@/lib/types"
 
-export async function uploadResume(file: File): Promise<ParsedTextResponse> {
+export async function uploadResume(file: File): Promise<SlideDeckResponse> {
   const form = new FormData()
   form.append("file", file)
 

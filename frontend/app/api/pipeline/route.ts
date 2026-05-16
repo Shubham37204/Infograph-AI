@@ -5,7 +5,7 @@ const BACKEND = process.env.BACKEND_URL ?? "http://localhost:8000"
 export async function POST(req: NextRequest) {
   const form = await req.formData()
 
-  const res = await fetch(`${BACKEND}/api/pipeline`, {
+  const res = await fetch(`${BACKEND}/api/v1/pipeline`, {
     method: "POST",
     body: form,
   })
