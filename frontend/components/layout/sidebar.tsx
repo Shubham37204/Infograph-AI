@@ -26,8 +26,17 @@ export function Sidebar() {
         sidebarCollapsed ? "w-14" : "w-56"
       )}
     >
-      <div className="flex h-12 items-center border-b border-white/5 px-4">
-        {!sidebarCollapsed && (
+      <div className={cn("flex h-12 items-center border-b border-white/5", sidebarCollapsed ? "justify-center px-2" : "px-4")}>
+        {sidebarCollapsed ? (
+          <Link
+            href="/"
+            className="flex h-8 w-8 items-center justify-center rounded-md border border-white/10 bg-white/5 text-[10px] font-bold tracking-tight text-foreground"
+            title="infograph-ai"
+            aria-label="infograph-ai landing page"
+          >
+            IA
+          </Link>
+        ) : (
           <span className="font-bold text-sm tracking-tight overflow-hidden text-nowrap">
             infograph-ai
           </span>
@@ -59,7 +68,7 @@ export function Sidebar() {
       <div className="border-t border-white/5 p-2 flex items-center justify-between gap-2">
         {!sidebarCollapsed && (
           <div className="px-2">
-            <UserButton afterSignOutUrl="/" appearance={{ elements: { userButtonAvatarBox: "h-6 w-6" } }} />
+            <UserButton appearance={{ elements: { userButtonAvatarBox: "h-6 w-6" } }} />
           </div>
         )}
         <Button

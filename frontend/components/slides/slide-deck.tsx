@@ -3,7 +3,7 @@
 import * as React from "react"
 import { motion, AnimatePresence } from "framer-motion"
 import { Download, ChevronLeft, ChevronRight, Maximize2, Minimize2 } from "lucide-react"
-import { SlideDeckResponse, Slide } from "@/lib/types"
+import { Slide } from "@/lib/types"
 import { SlideCard } from "./slide-card"
 import { Button } from "@/components/ui/button"
 import { useUIStore } from "@/lib/stores/ui-store"
@@ -43,36 +43,43 @@ export function SlideDeck({ slides, candidateName }: Props) {
   }
 
   return (
-    <div className={`flex flex-col w-full max-w-4xl mx-auto transition-all ${isFullscreen ? "fixed inset-0 z-50 bg-background p-8 max-w-none" : "mt-8"}`}>
+    <div className={`flex flex-col w-full max-w-5xl mx-auto transition-all ${isFullscreen ? "fixed inset-0 z-50 bg-background p-8 max-w-none" : ""}`}>
       
       {/* Header */}
-      <div className="flex items-center justify-between mb-6">
-        <h2 className="text-xl font-semibold text-foreground m-0">
-         {candidateName || "Presentation"}&apos;s Deck
-        </h2>
+      <div className="flex flex-col gap-4 rounded-lg border border-border/70 bg-card px-5 py-4 shadow-sm sm:flex-row sm:items-center sm:justify-between">
+        <div>
+          <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-muted-foreground">
+            Generated Presentation
+          </p>
+          <h2 className="mt-1 text-lg font-semibold text-foreground">
+            {candidateName || "Candidate"}&apos;s Deck
+          </h2>
+        </div>
         <div className="flex gap-2">
           <Button 
             variant="outline" 
             size="sm" 
             onClick={toggleFullscreen}
-            title="Toggle Fullscreen (F)"
+            className="h-9 gap-2 border-border/80"
+            title="Toggle fullscreen"
           >
-            {isFullscreen ? <Minimize2 className="w-4 h-4 mr-2" /> : <Maximize2 className="w-4 h-4 mr-2" />}
+            {isFullscreen ? <Minimize2 className="w-4 h-4" /> : <Maximize2 className="w-4 h-4" />}
             {isFullscreen ? "Exit" : "Fullscreen"}
           </Button>
           <Button 
             onClick={handleExport} 
             disabled={exporting}
             size="sm"
+            className="h-9 gap-2"
           >
-            <Download className="w-4 h-4 mr-2" />
+            <Download className="w-4 h-4" />
             {exporting ? "Exporting..." : "Export PDF"}
           </Button>
         </div>
       </div>
 
       {/* Slide Container */}
-      <div className="relative overflow-hidden rounded-2xl bg-card border shadow-sm aspect-[4/3] md:aspect-[16/9] flex flex-col">
+      <div className="relative mt-5 flex max-h-[560px] min-h-[460px] flex-col overflow-hidden rounded-lg border border-border/70 bg-card shadow-sm md:h-[52vh]">
         <AnimatePresence mode="wait">
           <motion.div
             key={activeSlide}
@@ -80,7 +87,7 @@ export function SlideDeck({ slides, candidateName }: Props) {
             animate={{ opacity: 1, x: 0 }}
             exit={{ opacity: 0, x: -20 }}
             transition={{ duration: 0.2 }}
-            className="flex-1 p-4 md:p-8 overflow-y-auto"
+            className="h-full p-4 md:p-8 overflow-y-auto"
           >
             <SlideCard slide={slides[activeSlide]} index={activeSlide} total={total} />
           </motion.div>
@@ -88,7 +95,7 @@ export function SlideDeck({ slides, candidateName }: Props) {
       </div>
 
       {/* Navigation Controls */}
-      <div className="flex items-center justify-center gap-6 mt-6">
+      <div className="flex items-center justify-center gap-6 mt-5">
         <Button
           variant="outline"
           size="icon"
@@ -126,7 +133,7 @@ export function SlideDeck({ slides, candidateName }: Props) {
         </Button>
       </div>
       
-      <p className="text-center text-xs text-muted-foreground mt-4">
+      <p className="text-center text-xs text-muted-foreground mt-3">
         Use <kbd className="px-1.5 py-0.5 bg-muted rounded border">←</kbd> <kbd className="px-1.5 py-0.5 bg-muted rounded border">→</kbd> to navigate, <kbd className="px-1.5 py-0.5 bg-muted rounded border">F</kbd> for fullscreen
       </p>
     </div>

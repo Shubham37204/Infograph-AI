@@ -1,5 +1,13 @@
 import { SlideDeckResponse } from "@/lib/types"
 
+function cleanBulletLabel(bullet: string): string {
+  const idx = bullet.indexOf(":")
+  if (idx === -1) return bullet
+
+  const label = bullet.slice(0, idx).replace(/^[^\p{L}\p{N}]+/u, "").trim()
+  return `${label}: ${bullet.slice(idx + 1).trim()}`
+}
+
 /**
  * Cleanly separated PDF generation module.
  * Takes a SlideDeckResponse and generates a multi-page PDF.
@@ -62,7 +70,7 @@ export async function exportToPDF(deck: SlideDeckResponse): Promise<void> {
     
     slide.bullets.forEach((b) => {
       // Very basic handling for timeline arrows/bolding could go here
-      const lines = doc.splitTextToSize(`• ${b}`, W - 30)
+      const lines = doc.splitTextToSize(`• ${cleanBulletLabel(b)}`, W - 30)
       doc.text(lines, 18, y)
       y += lines.length * 7 + 3
     })

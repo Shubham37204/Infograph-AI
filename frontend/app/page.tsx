@@ -2,192 +2,192 @@ import { SignInButton, SignUpButton } from "@clerk/nextjs"
 import { auth } from "@clerk/nextjs/server"
 import Link from "next/link"
 import { Button } from "@/components/ui/button"
-import { ArrowRight, Layout, FileText, Share2, Terminal, Monitor, Database } from "lucide-react"
+import { ArrowRight, BarChart3, FileText, Layout, Presentation, Share2, Upload } from "lucide-react"
 
 export default async function LandingPage() {
   const { userId } = await auth()
 
   return (
-    <div className="relative min-h-screen bg-background text-foreground flex flex-col overflow-x-hidden">
-      {/* Subtle Background Pattern */}
-      <div className="absolute inset-0 bg-[linear-gradient(to_right,#80808012_1px,transparent_1px),linear-gradient(to_bottom,#80808012_1px,transparent_1px)] bg-[size:40px_40px] [mask-image:radial-gradient(ellipse_60%_50%_at_50%_0%,#000_70%,transparent_100%)]" />
-
-      {/* Header */}
-      <header className="relative z-20 flex items-center justify-between px-6 py-4 max-w-7xl mx-auto w-full border-b border-white/5">
-        <div className="text-sm font-bold tracking-tight">infograph-ai</div>
-        <div className="flex items-center gap-4">
-           {!userId && (
-             <SignInButton mode="modal">
-               <Button variant="ghost" size="sm" className="text-[11px] font-bold uppercase tracking-widest text-muted-foreground hover:text-foreground">
-                 Sign In
-               </Button>
-             </SignInButton>
-           )}
-           <Button asChild size="sm" className="h-8 text-[11px] font-bold uppercase tracking-widest px-4">
-             <Link href="/dashboard">
-               {userId ? "Go to Dashboard" : "Get Started"}
-             </Link>
-           </Button>
+    <div className="min-h-screen bg-background text-foreground">
+      <header className="sticky top-0 z-30 border-b border-border/60 bg-background/90 backdrop-blur">
+        <div className="mx-auto flex h-16 w-full max-w-7xl items-center justify-between px-6">
+          <Link href="/" className="text-base font-bold tracking-tight">
+            infograph-ai
+          </Link>
+          <div className="flex items-center gap-3">
+            {!userId && (
+              <SignInButton mode="modal">
+                <Button variant="ghost" size="sm" className="text-xs font-semibold text-muted-foreground">
+                  Sign in
+                </Button>
+              </SignInButton>
+            )}
+            {userId ? (
+              <Button asChild size="sm" className="h-9 px-4 font-semibold">
+                <Link href="/dashboard">Dashboard</Link>
+              </Button>
+            ) : (
+              <SignUpButton mode="modal">
+                <Button size="sm" className="h-9 px-4 font-semibold">
+                  Get Started
+                </Button>
+              </SignUpButton>
+            )}
+          </div>
         </div>
       </header>
 
-      <main className="relative z-10 flex flex-col items-center">
-        {/* Hero Section */}
-        <section className="pt-24 pb-12 px-6 text-center max-w-4xl mx-auto">
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/5 border border-white/10 text-[10px] font-bold uppercase tracking-widest text-muted-foreground mb-8">
-            <span className="w-1 h-1 rounded-full bg-emerald-500 animate-pulse" />
-            Engineering-Oriented Workspace
-          </div>
-          
-          <h1 className="text-5xl md:text-7xl font-bold tracking-tighter leading-[0.95] mb-8">
-            Resume intelligence <br />
-            <span className="text-muted-foreground/40">transformed into slides.</span>
-          </h1>
-          
-          <p className="text-sm md:text-lg text-muted-foreground max-w-xl mx-auto leading-relaxed mb-10 font-medium">
-            A utilitarian workspace designed for transforming high-density professional documents into editorial-grade presentations.
-          </p>
-
-          <div className="flex justify-center gap-4">
-            {!userId ? (
-              <SignUpButton mode="modal">
-                <Button size="lg" className="h-12 px-8 font-bold tracking-tight rounded-lg">
-                  Initialize Workspace
-                  <ArrowRight className="ml-2 h-4 w-4" />
+      <main>
+        <section className="relative overflow-hidden border-b border-border/60">
+          <div className="absolute inset-0 bg-[linear-gradient(to_right,#71717a16_1px,transparent_1px),linear-gradient(to_bottom,#71717a16_1px,transparent_1px)] bg-[size:48px_48px]" />
+          <div className="relative mx-auto flex min-h-[calc(100vh-4rem)] w-full max-w-7xl flex-col px-6 pt-20">
+            <div className="mx-auto max-w-4xl text-center">
+              <div className="mb-7 inline-flex items-center gap-2 rounded-full border border-border bg-card px-3 py-1 text-[11px] font-bold uppercase tracking-[0.18em] text-muted-foreground shadow-sm">
+                <span className="h-1.5 w-1.5 rounded-full bg-emerald-500" />
+                Resume decks for hiring conversations
+              </div>
+              <h1 className="text-5xl font-bold leading-[0.96] tracking-tight md:text-7xl">
+                Turn a resume into a polished presentation.
+              </h1>
+              <p className="mx-auto mt-7 max-w-2xl text-base leading-7 text-muted-foreground md:text-lg">
+                Upload a PDF resume and get a structured slide deck with skills, experience highlights, career timeline, recommendations, and ATS fit.
+              </p>
+              <div className="mt-9 flex flex-col items-center justify-center gap-3 sm:flex-row">
+                {userId ? (
+                  <Button asChild size="lg" className="h-12 gap-2 px-7 font-semibold shadow-sm">
+                    <Link href="/dashboard">
+                      Open Workspace
+                      <ArrowRight className="h-4 w-4" />
+                    </Link>
+                  </Button>
+                ) : (
+                  <SignUpButton mode="modal">
+                    <Button size="lg" className="h-12 gap-2 px-7 font-semibold shadow-sm">
+                      Create Your First Deck
+                      <ArrowRight className="h-4 w-4" />
+                    </Button>
+                  </SignUpButton>
+                )}
+                <Button asChild variant="outline" size="lg" className="h-12 gap-2 border-border bg-background/70 px-7 font-semibold">
+                  <Link href={userId ? "/upload" : "/sign-in"}>
+                    <Upload className="h-4 w-4" />
+                    Upload Resume
+                  </Link>
                 </Button>
-              </SignUpButton>
-            ) : (
-              <Button asChild size="lg" className="h-12 px-8 font-bold tracking-tight rounded-lg">
-                <Link href="/dashboard">
-                  Enter Workspace
-                  <ArrowRight className="ml-2 h-4 w-4" />
-                </Link>
-              </Button>
-            )}
-          </div>
-        </section>
+              </div>
+            </div>
 
-        {/* Product Preview Mockup */}
-        <section className="px-6 pb-24 w-full max-w-6xl mx-auto">
-          <div className="relative group rounded-2xl border border-white/10 bg-card/50 overflow-hidden p-2">
-            <div className="absolute inset-0 bg-gradient-to-t from-background to-transparent z-10 opacity-40" />
-            <img 
-              src="/images/preview.png" 
-              alt="Infograph-AI Workspace Preview" 
-              className="w-full h-auto rounded-xl grayscale opacity-80 group-hover:grayscale-0 group-hover:opacity-100 transition-all duration-1000"
-            />
-            
-            {/* Overlay UI Elements */}
-            <div className="absolute top-8 left-8 z-20 hidden md:block">
-               <div className="bg-background/80 backdrop-blur border border-white/10 p-4 rounded-lg shadow-2xl space-y-3 w-48 animate-in fade-in slide-in-from-left-4 duration-1000">
+            <div className="mt-16 flex-1">
+              <div className="mx-auto max-w-6xl rounded-t-xl border border-b-0 border-border bg-card shadow-2xl">
+                <div className="flex h-11 items-center justify-between border-b border-border px-4">
                   <div className="flex items-center gap-2">
-                    <div className="w-2 h-2 rounded-full bg-emerald-500" />
-                    <span className="text-[10px] font-bold uppercase tracking-wider">Analysis Active</span>
+                    <span className="h-2.5 w-2.5 rounded-full bg-zinc-300" />
+                    <span className="h-2.5 w-2.5 rounded-full bg-zinc-300" />
+                    <span className="h-2.5 w-2.5 rounded-full bg-zinc-300" />
                   </div>
-                  <div className="space-y-1.5">
-                    <div className="h-1 w-full bg-white/10 rounded-full overflow-hidden">
-                      <div className="h-full bg-emerald-500 w-[65%]" />
-                    </div>
-                    <div className="text-[8px] text-muted-foreground uppercase font-bold">Extracting Data: 65%</div>
+                  <div className="text-[10px] font-bold uppercase tracking-[0.2em] text-muted-foreground">
+                    Live Deck Preview
                   </div>
-               </div>
-            </div>
-          </div>
-        </section>
-
-        {/* Technical Workflow Section */}
-        <section className="w-full bg-white/[0.01] border-y border-white/5 py-24 px-6">
-          <div className="max-w-6xl mx-auto">
-            <div className="grid md:grid-cols-2 gap-16 items-center">
-               <div className="space-y-6">
-                  <h2 className="text-3xl font-bold tracking-tighter">Engineered for <br/> document clarity.</h2>
-                  <p className="text-muted-foreground text-sm leading-relaxed max-w-md">
-                    We have optimized the extraction pipeline to identify structural markers in professional resumes, mapping experience, skills, and timelines to a standardized infographic schema.
-                  </p>
-                  
-                  <ul className="space-y-4 pt-4">
-                    {[
-                      { icon: Terminal, title: "Data Normalization", desc: "Standardizing heterogeneous resume formats into clean JSON." },
-                      { icon: Monitor, title: "Editorial Layouts", desc: "Automated slide generation using structural design principles." },
-                      { icon: Database, title: "Persistence", desc: "Track generations with lightweight local or cloud storage." }
-                    ].map((item, i) => (
-                      <li key={i} className="flex gap-4">
-                        <div className="h-8 w-8 rounded bg-white/5 border border-white/10 flex items-center justify-center shrink-0">
-                          <item.icon className="w-4 h-4 text-muted-foreground" />
-                        </div>
-                        <div>
-                          <h4 className="text-[11px] font-bold uppercase tracking-wider">{item.title}</h4>
-                          <p className="text-xs text-muted-foreground mt-0.5">{item.desc}</p>
-                        </div>
-                      </li>
+                </div>
+                <div className="grid min-h-[360px] gap-px bg-border md:grid-cols-[220px_1fr]">
+                  <aside className="hidden bg-muted/30 p-4 md:block">
+                    <div className="mb-6 text-xs font-bold">infograph-ai</div>
+                    {["Snapshot", "Skills", "Experience", "Timeline", "ATS Score"].map((item, index) => (
+                      <div
+                        key={item}
+                        className={`mb-2 flex items-center gap-3 rounded-md px-3 py-2 text-xs ${
+                          index === 4 ? "bg-background text-foreground shadow-sm" : "text-muted-foreground"
+                        }`}
+                      >
+                        <span className="h-1.5 w-1.5 rounded-full bg-current" />
+                        {item}
+                      </div>
                     ))}
-                  </ul>
-               </div>
-
-               <div className="grid grid-cols-2 gap-4">
-                  <div className="space-y-4 pt-8">
-                     <div className="h-40 bg-card border border-white/5 rounded-xl p-4 flex flex-col justify-end">
-                        <div className="text-[9px] font-bold text-muted-foreground uppercase mb-1">Success Rate</div>
-                        <div className="text-2xl font-bold tracking-tighter">98.4%</div>
-                     </div>
-                     <div className="h-32 bg-card border border-white/5 rounded-xl p-4 flex flex-col justify-end">
-                        <div className="text-[9px] font-bold text-muted-foreground uppercase mb-1">Avg. Processing</div>
-                        <div className="text-2xl font-bold tracking-tighter">4.2s</div>
-                     </div>
+                  </aside>
+                  <div className="bg-background p-5 md:p-8">
+                    <div className="mb-5 flex items-center justify-between">
+                      <div>
+                        <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-muted-foreground">ATS Score - 8 of 8</p>
+                        <h2 className="mt-3 text-2xl font-bold tracking-tight">ATS Compatibility Score</h2>
+                      </div>
+                      <div className="rounded-full border border-border px-3 py-1 text-xs font-semibold">85 / 100</div>
+                    </div>
+                    <div className="rounded-lg border border-border bg-card p-6 md:p-8">
+                      <p className="text-lg text-muted-foreground">Strong technical skills and project experience</p>
+                      <div className="mt-8 grid gap-5 md:grid-cols-3">
+                        {[
+                          ["Matched", "Next.js, TypeScript, Python, AI/ML"],
+                          ["Missing", "More quantified metrics in experience bullets"],
+                          ["Fix", "Add stronger project outcomes and deployment details"],
+                        ].map(([label, value]) => (
+                          <div key={label}>
+                            <p className="text-[10px] font-bold uppercase tracking-[0.18em] text-muted-foreground">{label}</p>
+                            <p className="mt-2 text-sm leading-6">{value}</p>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
                   </div>
-                  <div className="space-y-4">
-                     <div className="h-32 bg-card border border-white/5 rounded-xl p-4 flex flex-col justify-end">
-                        <div className="text-[9px] font-bold text-muted-foreground uppercase mb-1">Data Points</div>
-                        <div className="text-2xl font-bold tracking-tighter">120+</div>
-                     </div>
-                     <div className="h-40 bg-card border border-white/5 rounded-xl p-4 flex flex-col justify-end">
-                        <div className="text-[9px] font-bold text-muted-foreground uppercase mb-1">Global Users</div>
-                        <div className="text-2xl font-bold tracking-tighter">12k</div>
-                     </div>
-                  </div>
-               </div>
+                </div>
+              </div>
             </div>
           </div>
         </section>
 
-        {/* Feature Grid (Condensed) */}
-        <section className="py-24 px-6 max-w-6xl mx-auto w-full">
-           <div className="grid grid-cols-1 md:grid-cols-3 gap-px bg-white/5 border border-white/5 rounded-xl overflow-hidden">
-            <div className="p-8 bg-card flex flex-col gap-3 group hover:bg-white/[0.02] transition-colors">
-              <FileText className="w-4 h-4 text-muted-foreground mb-1 group-hover:text-foreground transition-colors" />
-              <h3 className="text-xs font-bold uppercase tracking-wider">Deep Analysis</h3>
-              <p className="text-[11px] text-muted-foreground leading-relaxed">Our engine parses complex resume structures to extract meaningful professional narratives.</p>
-            </div>
-            <div className="p-8 bg-card flex flex-col gap-3 group hover:bg-white/[0.02] transition-colors">
-              <Layout className="w-4 h-4 text-muted-foreground mb-1 group-hover:text-foreground transition-colors" />
-              <h3 className="text-xs font-bold uppercase tracking-wider">Smart Formatting</h3>
-              <p className="text-[11px] text-muted-foreground leading-relaxed">Data is automatically mapped to one of five editorial slide types based on content density.</p>
-            </div>
-            <div className="p-8 bg-card flex flex-col gap-3 group hover:bg-white/[0.02] transition-colors">
-              <Share2 className="w-4 h-4 text-muted-foreground mb-1 group-hover:text-foreground transition-colors" />
-              <h3 className="text-xs font-bold uppercase tracking-wider">Instant Export</h3>
-              <p className="text-[11px] text-muted-foreground leading-relaxed">Download your generated presentation as a high-fidelity PDF or share a private workspace link.</p>
-            </div>
+        <section className="mx-auto grid w-full max-w-7xl gap-16 px-6 py-24 lg:grid-cols-[0.9fr_1.1fr]">
+          <div>
+            <p className="text-[11px] font-bold uppercase tracking-[0.2em] text-muted-foreground">Designed for clarity</p>
+            <h2 className="mt-4 text-3xl font-bold leading-tight tracking-tight md:text-4xl">
+              A resume workspace that feels finished before export.
+            </h2>
+            <p className="mt-5 max-w-xl text-sm leading-7 text-muted-foreground">
+              The interface focuses on the work: upload, review, present, and export. No noisy panels, no broken preview images, no placeholder-heavy layout.
+            </p>
+          </div>
+          <div className="grid gap-4 sm:grid-cols-2">
+            {[
+              [FileText, "Deep Resume Read", "Extracts skills, education, project evidence, experience, and timeline details from the resume."],
+              [Presentation, "Presentation First", "Turns dense resume content into recruiter-friendly slides with consistent visual rhythm."],
+              [BarChart3, "ATS Fit Summary", "Surfaces matched keywords, missing signals, and the next best improvement."],
+              [Share2, "Clean Export", "Exports the generated deck as a PDF without changing the on-screen structure."],
+            ].map(([Icon, title, desc]) => (
+              <div key={title as string} className="rounded-lg border border-border bg-card p-6 shadow-sm">
+                <Icon className="h-5 w-5 text-muted-foreground" />
+                <h3 className="mt-5 text-sm font-bold uppercase tracking-[0.12em]">{title as string}</h3>
+                <p className="mt-3 text-sm leading-6 text-muted-foreground">{desc as string}</p>
+              </div>
+            ))}
+          </div>
+        </section>
+
+        <section className="border-y border-border bg-muted/20">
+          <div className="mx-auto grid w-full max-w-7xl gap-10 px-6 py-20 md:grid-cols-3">
+            {[
+              [Upload, "Upload", "Start with a single PDF resume."],
+              [Layout, "Review", "Move through a complete deck in the workspace."],
+              [Share2, "Export", "Download a presentation-ready PDF."],
+            ].map(([Icon, title, desc]) => (
+              <div key={title as string} className="flex items-start gap-4">
+                <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-md border border-border bg-background">
+                  <Icon className="h-4 w-4 text-muted-foreground" />
+                </div>
+                <div>
+                  <h3 className="text-sm font-bold">{title as string}</h3>
+                  <p className="mt-1 text-sm text-muted-foreground">{desc as string}</p>
+                </div>
+              </div>
+            ))}
           </div>
         </section>
       </main>
 
-      <footer className="relative py-12 px-6 border-t border-white/5 z-10">
-        <div className="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-6">
-          <div className="flex flex-col items-center md:items-start gap-1">
-            <div className="text-xs font-bold tracking-tight">infograph-ai</div>
-            <div className="text-[9px] text-muted-foreground/50 uppercase tracking-widest font-bold">Human-designed utility for professional intelligence.</div>
+      <footer className="px-6 py-10">
+        <div className="mx-auto flex max-w-7xl flex-col gap-4 text-sm text-muted-foreground md:flex-row md:items-center md:justify-between">
+          <div>
+            <div className="font-bold text-foreground">infograph-ai</div>
+            <div className="mt-1 text-xs">Resume intelligence, ready to present.</div>
           </div>
-          
-          <div className="flex gap-8 text-[10px] text-muted-foreground/50 uppercase tracking-widest font-bold">
-            <span className="cursor-default hover:text-muted-foreground transition-colors">Workspace v1.0.2</span>
-            <span className="cursor-default hover:text-muted-foreground transition-colors">Systems Documentation</span>
-            <span className="cursor-default hover:text-muted-foreground transition-colors">Legal</span>
-          </div>
-        </div>
-        
-        <div className="mt-12 text-center text-[10px] text-muted-foreground/30 uppercase tracking-[0.3em] font-bold">
-          © {new Date().getFullYear()} Infograph-AI • Optimized for performance
+          <div className="text-xs">© {new Date().getFullYear()} Infograph-AI</div>
         </div>
       </footer>
     </div>

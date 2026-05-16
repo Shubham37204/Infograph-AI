@@ -39,7 +39,7 @@ STRICT RULES:
 - timeline: each bullet → "YEAR → Company · Role: one-line achievement". Chronological, newest first.
 - strengths: specific to THIS candidate. Extract from resume evidence. No generic statements.
 - recommendations: actionable and specific. NEVER repeat body text. Min 2 bullets.
-- ats_score: Body = "ATS Score: XX/100 — one line verdict". Bullets: matched, missing, one fix.
+- ats_score: Body = "ATS Score: XX/100 — one line verdict". Bullets: matched, missing, one fix. Do not use emoji or decorative symbols in labels.
 - All bullets: min 3, max 5. Never repeat body text.
 
 Required JSON structure:
@@ -124,9 +124,9 @@ Required JSON structure:
       "title": "ATS Compatibility Score",
       "body": "ATS Score: XX/100 — [one line verdict]",
       "bullets": [
-        "✅ Matched: keyword1, keyword2, keyword3",
-        "❌ Missing: keyword1, keyword2, keyword3",
-        "⚡ Fix: specific action to improve ATS score immediately"
+        "Matched: keyword1, keyword2, keyword3",
+        "Missing: keyword1, keyword2, keyword3",
+        "Fix: specific action to improve ATS score immediately"
       ]
     }
   ]

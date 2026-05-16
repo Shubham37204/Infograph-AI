@@ -25,22 +25,23 @@ export default function DashboardPage() {
 
   // If ID is provided, show that specific item
   const activeItem = id ? items.find(i => i.id === id) : items[0]
+  const displayName = activeItem?.fileName.replace(/\.pdf$/i, "")
 
   return (
     <div className="max-w-6xl mx-auto space-y-6">
-      <div className="flex items-center justify-between">
+      <div className="flex flex-col gap-4 border-b border-border/60 pb-6 sm:flex-row sm:items-end sm:justify-between">
         <div>
-          <h1 className="text-xl font-bold tracking-tight">
-            {activeItem ? activeItem.fileName : "Dashboard"}
+          <h1 className="text-2xl font-bold tracking-tight">
+            {displayName || "Dashboard"}
           </h1>
-          <p className="text-[11px] text-muted-foreground mt-1">
-            {activeItem ? `Generated ${new Date(activeItem.timestamp).toLocaleDateString()}` : "Overview of your workspace."}
+          <p className="text-sm text-muted-foreground mt-2">
+            {activeItem ? `Generated ${new Date(activeItem.timestamp).toLocaleDateString()}` : "Upload a resume and generate a recruiter-ready visual deck."}
           </p>
         </div>
         <div className="flex items-center gap-2">
-          <Button asChild size="sm" className="h-8 gap-2 text-xs font-medium">
+          <Button asChild className="h-10 gap-2 px-4 text-sm font-semibold shadow-sm">
             <Link href="/upload">
-              <Plus className="h-3.5 w-3.5" />
+              <Plus className="h-4 w-4" />
               New Analysis
             </Link>
           </Button>
@@ -91,16 +92,10 @@ export default function DashboardPage() {
         </div>
       ) : (
         <div className="space-y-6">
-          <div className="rounded-lg border border-white/5 bg-card overflow-hidden">
-            <SlideDeck 
-              slides={activeItem.slides} 
-              candidateName={activeItem.fileName.replace('.pdf', '')} 
-            />
-          </div>
-
-          <div className="grid grid-cols-3 gap-6">
-             {/* Additional metadata could go here */}
-          </div>
+          <SlideDeck 
+            slides={activeItem.slides} 
+            candidateName={displayName} 
+          />
         </div>
       )}
     </div>

@@ -1,8 +1,6 @@
 "use client"
 
 import { Slide } from "@/lib/types"
-import { Badge } from "@/components/ui/badge"
-import { cn } from "@/lib/cn"
 
 interface Props {
   slide: Slide
@@ -13,13 +11,16 @@ interface Props {
 function parseLabel(bullet: string) {
   const idx = bullet.indexOf(":")
   if (idx === -1) return { label: "", value: bullet }
-  return { label: bullet.slice(0, idx).trim(), value: bullet.slice(idx + 1).trim() }
+  return {
+    label: bullet.slice(0, idx).replace(/^[^\p{L}\p{N}]+/u, "").trim(),
+    value: bullet.slice(idx + 1).trim(),
+  }
 }
 
 /* ── Snapshot ─────────────────────────────────── */
 function SnapshotCard({ slide, index, total }: Props) {
   return (
-    <div className="flex flex-col gap-6 min-h-[400px] p-8 md:p-12 bg-card border border-white/5 rounded-lg shadow-sm">
+    <div className="flex flex-col gap-6 min-h-full p-8 md:p-12 bg-card border border-white/5 rounded-lg shadow-sm">
       <div className="flex justify-between items-start">
         <span className="text-[10px] font-bold text-muted-foreground uppercase tracking-[0.2em]">
           Overview • {index + 1} of {total}
@@ -30,7 +31,7 @@ function SnapshotCard({ slide, index, total }: Props) {
         {slide.body}
       </h2>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-px bg-white/5 border border-white/5 rounded-lg overflow-hidden mt-auto">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-px bg-white/5 border border-white/5 rounded-lg overflow-hidden">
         {slide.bullets.map((b, i) => {
           const { label, value } = parseLabel(b)
           return (
@@ -52,7 +53,7 @@ function SnapshotCard({ slide, index, total }: Props) {
 /* ── Timeline ─────────────────────────────────── */
 function TimelineCard({ slide, index, total }: Props) {
   return (
-    <div className="flex flex-col gap-8 min-h-[400px] p-8 md:p-12 bg-card border border-white/5 rounded-lg shadow-sm">
+    <div className="flex flex-col gap-8 min-h-full p-8 md:p-12 bg-card border border-white/5 rounded-lg shadow-sm">
       <div className="flex justify-between items-start">
         <span className="text-[10px] font-bold text-muted-foreground uppercase tracking-[0.2em]">
           Timeline • {index + 1} of {total}
