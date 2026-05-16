@@ -3,20 +3,21 @@
 import * as React from "react"
 import { motion, AnimatePresence } from "framer-motion"
 import { Download, ChevronLeft, ChevronRight, Maximize2, Minimize2 } from "lucide-react"
-import { SlideDeckResponse } from "@/lib/types"
+import { SlideDeckResponse, Slide } from "@/lib/types"
 import { SlideCard } from "./slide-card"
 import { Button } from "@/components/ui/button"
 import { useUIStore } from "@/lib/stores/ui-store"
 import { exportToPDF } from "@/lib/export-pdf"
 
 interface Props {
-  deck: SlideDeckResponse
+  slides: Slide[]
+  candidateName?: string
 }
 
-export function SlideDeck({ deck }: Props) {
+export function SlideDeck({ slides, candidateName }: Props) {
   const { activeSlide, setActiveSlide, isFullscreen, toggleFullscreen } = useUIStore()
   const [exporting, setExporting] = React.useState(false)
-  const total = deck.slides.length
+  const total = slides.length
 
   const prev = React.useCallback(() => setActiveSlide(Math.max(0, activeSlide - 1)), [activeSlide, setActiveSlide])
   const next = React.useCallback(() => setActiveSlide(Math.min(total - 1, activeSlide + 1)), [activeSlide, setActiveSlide, total])
@@ -35,7 +36,7 @@ export function SlideDeck({ deck }: Props) {
   async function handleExport() {
     setExporting(true)
     try {
-      await exportToPDF(deck)
+      await exportToPDF({ slides, candidate_name: candidateName || "Candidate" })
     } finally {
       setExporting(false)
     }
@@ -47,7 +48,7 @@ export function SlideDeck({ deck }: Props) {
       {/* Header */}
       <div className="flex items-center justify-between mb-6">
         <h2 className="text-xl font-semibold text-foreground m-0">
-         {deck.candidate_name}&apos;s Deck
+         {candidateName || "Presentation"}&apos;s Deck
         </h2>
         <div className="flex gap-2">
           <Button 
@@ -81,7 +82,7 @@ export function SlideDeck({ deck }: Props) {
             transition={{ duration: 0.2 }}
             className="flex-1 p-4 md:p-8 overflow-y-auto"
           >
-            <SlideCard slide={deck.slides[activeSlide]} index={activeSlide} total={total} />
+            <SlideCard slide={slides[activeSlide]} index={activeSlide} total={total} />
           </motion.div>
         </AnimatePresence>
       </div>
@@ -100,7 +101,7 @@ export function SlideDeck({ deck }: Props) {
         </Button>
         
         <div className="flex gap-2">
-          {deck.slides.map((_, i) => (
+          {slides.map((_, i) => (
             <button
               key={i}
               onClick={() => setActiveSlide(i)}

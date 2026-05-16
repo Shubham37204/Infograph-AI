@@ -1,6 +1,6 @@
 import { create } from 'zustand'
 import { persist, createJSONStorage } from 'zustand/middleware'
-import { Slide } from './types'
+import { Slide } from '@/lib/types'
 
 export interface HistoryItem {
   id: string

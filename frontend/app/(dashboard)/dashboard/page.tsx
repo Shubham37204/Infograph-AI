@@ -15,7 +15,10 @@ export default function DashboardPage() {
   const [mounted, setMounted] = React.useState(false)
 
   React.useEffect(() => {
-    setMounted(true)
+    // Use a small timeout to move the update out of the synchronous effect body
+    // This avoids the 'cascading render' warning in Next.js/React.
+    const timer = setTimeout(() => setMounted(true), 0)
+    return () => clearTimeout(timer)
   }, [])
 
   if (!mounted) return null
@@ -89,7 +92,10 @@ export default function DashboardPage() {
       ) : (
         <div className="space-y-6">
           <div className="rounded-lg border border-white/5 bg-card overflow-hidden">
-            <SlideDeck slides={activeItem.slides} />
+            <SlideDeck 
+              slides={activeItem.slides} 
+              candidateName={activeItem.fileName.replace('.pdf', '')} 
+            />
           </div>
 
           <div className="grid grid-cols-3 gap-6">

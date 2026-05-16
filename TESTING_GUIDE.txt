@@ -1,0 +1,62 @@
+INFOGRAPH-AI: TESTING & VERIFICATION GUIDE
+==========================================
+
+Follow this guide to verify all implemented features and ensure the product-focused 
+workspace is functioning correctly.
+
+---
+
+1. AUTHENTICATION & SECURITY (CLERK)
+------------------------------------
+[ ] Visit http://localhost:3000
+[ ] Verify the "Get Started" and "Sign In" buttons open the Clerk modal.
+[ ] Try to visit http://localhost:3000/dashboard directly without signing in.
+    - Expected: Redirect to sign-in page.
+[ ] Try to visit http://localhost:3000/upload without signing in.
+    - Expected: Redirect to sign-in page.
+[ ] Sign in and verify the "User Profile" button appears in the sidebar.
+
+2. LANDING PAGE (UI/UX)
+-----------------------
+[ ] Verify the Graphite/Zinc (#09090b) dark theme is consistent.
+[ ] Check the "Product Preview" mockup section for high-fidelity rendering.
+[ ] Verify the "Engineered for document clarity" workflow section is visible.
+[ ] Check for "Design Restraint": No flashy neons or excessive animations.
+
+3. UPLOAD WORKFLOW
+------------------
+[ ] Navigate to /upload via the "New Analysis" button in the sidebar.
+[ ] Drag and drop a valid PDF resume or click to browse.
+[ ] Observe the "Processing Stages":
+    - Stage 1: Parsing Data
+    - Stage 2: Analyzing Content
+    - Stage 3: Generating Slides
+[ ] Verify the completion state appears (Green checkmark).
+[ ] Verify automatic redirection to the dashboard workspace after 1.5s.
+
+4. DASHBOARD & WORKSPACE
+------------------------
+[ ] Verify the Workspace shows the generated slide deck.
+[ ] Check slide layout: Editorial style, flat design, high readability.
+[ ] Verify the Sidebar navigation works: Home, Upload, History.
+[ ] Click "Resume Workspace" on any previous item to reload the deck.
+
+5. HISTORY & PERSISTENCE
+------------------------
+[ ] Navigate to the "History" page.
+[ ] Verify all previous generations are listed in the table.
+[ ] Check metadata: File name, Date, and File Size should be accurate.
+[ ] Delete a record and verify it is removed from the table.
+[ ] PERSISTENCE CHECK: Refresh the browser entirely.
+    - Expected: Your history remains (powered by LocalStorage).
+
+6. TECHNICAL CHECKS
+-------------------
+[ ] Open Browser Console (F12).
+    - Expected: No "Unknown utility class" (Tailwind) or "Casading render" errors.
+[ ] Check responsiveness: Resize the window.
+    - Expected: Sidebar should handle mobile/desktop correctly.
+
+---
+Status: READY FOR BACKEND INTEGRATION
+Design Language: Professional / Utilitarian / High-Density

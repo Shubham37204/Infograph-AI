@@ -18,7 +18,9 @@ export default function HistoryPage() {
   const [mounted, setMounted] = React.useState(false)
 
   React.useEffect(() => {
-    setMounted(true)
+    // Avoid synchronous state updates in useEffect to prevent 'cascading render' warnings.
+    const timer = setTimeout(() => setMounted(true), 0)
+    return () => clearTimeout(timer)
   }, [])
 
   if (!mounted) return null

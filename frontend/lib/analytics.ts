@@ -6,7 +6,7 @@
  * without overcomplicating the codebase with third-party tracking scripts.
  */
 
-export function trackEvent(eventName: string, properties?: Record<string, any>) {
+export function trackEvent(eventName: string, properties?: Record<string, unknown>) {
   if (process.env.NODE_ENV === "development") {
     // eslint-disable-next-line no-console
     console.log(`[Analytics] ${eventName}`, properties || "")
@@ -15,7 +15,7 @@ export function trackEvent(eventName: string, properties?: Record<string, any>) 
   // Future: window.posthog?.capture(eventName, properties)
 }
 
-export function identifyUser(userId: string, traits?: Record<string, any>) {
+export function identifyUser(userId: string, traits?: Record<string, unknown>) {
   if (process.env.NODE_ENV === "development") {
     // eslint-disable-next-line no-console
     console.log(`[Analytics] Identify User: ${userId}`, traits || "")

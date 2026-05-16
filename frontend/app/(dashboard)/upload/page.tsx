@@ -7,6 +7,7 @@ import { DropZone } from "@/components/upload/drop-zone"
 import { ProcessingStages } from "@/components/upload/processing-stages"
 import { Button } from "@/components/ui/button"
 import { RefreshCcw, ArrowLeft, CheckCircle2 } from "lucide-react"
+import Link from "next/link"
 import { useHistoryStore } from "@/lib/stores/history-store"
 
 export default function UploadPage() {
@@ -19,8 +20,6 @@ export default function UploadPage() {
   // Simulate progress stages
   React.useEffect(() => {
     if (!isPending) return
-    
-    setStage("parsing")
     
     const timers = [
       setTimeout(() => setStage("analyzing"), 2000), 
@@ -54,6 +53,7 @@ export default function UploadPage() {
 
   const handleFileSelect = (file: File) => {
     setLastFile({ name: file.name, size: file.size })
+    setStage("parsing")
     mutate(file)
   }
 
